@@ -109,5 +109,6 @@ javascript:(function(){
 
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
+	util.quick_edit_main_col("D");
 	
 })();
