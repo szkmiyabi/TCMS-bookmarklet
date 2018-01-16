@@ -98,5 +98,6 @@ javascript:(function(){
 
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
+	util.draft_save();
 	
 })();
