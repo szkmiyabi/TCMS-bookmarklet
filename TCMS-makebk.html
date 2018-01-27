@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<html lang="ja">
+<style type="text/css">
+* {font-family:"メイリオ",Meiryo,sans-serif;}
+input,textarea,label{font-size: 90%;}
+button#bkm_create_btn {font-size:110%;}
+dd {margin-left: 0;}
+#bkm {border-collapse: collapse;width: 600px;}
+#bkm th {background: #eee;border:3px solid #fff;padding: 5px;}
+#bkm td {background: #FFFFE0;border:3px solid #fff;padding: 5px;}
+#bkm_comments {width: 430px;}
+.bkm-input {width: 370px;}
+#bkm td.btnarea {text-align: center;background: #eee;}
+#bkm td.codeare {background: #eee;}
+#bkm_code {width: 600px; height: 10em;}
+</style>
+</head>
+<body>
+<script type="text/javascript">
+function bkm_create(){
+  this.d = document;
+  this.bkm_head = "javascript:(function(){";
+  this.bkm_bottom = "})();";
+  this.bkm_body = "";
+  this.cat_hash = {
+     "bkm-browse-url": "browse-url",
+  };
+}
+bkm_create.prototype = {
+    exec: function() {
+        switch(this.get_selected_rdo()) {
+            case "bkm-browse-url":
+                this.browse_url();
+                break;
+            default:
+                break;
+        }
+    },
+    browse_url: function() {
+        var burl = this.d.getElementById("bkm-browse-url").value;
+        if(burl==="") {
+            alert("URLが入力されていません！");
+            return;
+        }
+        this.bkm_body += 'location.href="' + burl + '";';
+        this.d.getElementById("bkm_code").value = this.bkm_head + this.bkm_body + this.bkm_bottom;
+    },
+    clear_this_text: function(obj) {
+	   this.d.getElementById(obj).value = "";
+    },
+    br_escape: function(str) {
+      var ret = str.replace(/(\r\n|\n)/mg, "\\n");
+      return ret;
+    },
+    search_cat: function(key) {
+        var bkey = this.cat_hash[key];
+        if(typeof bkey === "undefined" || bkey === null || bkey === "") return null;
+        return bkey;
+    },
+    get_selected_rdo: function() {
+        var ret = "";
+        var rds = this.d.getElementsByName("bkm-category");
+        for(var i=0; i<rds.length; i++) {
+            var rd = rds.item(i);
+            if(rd.checked === true) {
+                ret = rd.value;
+                break;
+            }
+        }
+        return ret;
+    }
+};   
+var util = new bkm_create();  
+</script>
+<h1>ブックマークレット生成</h1>
+<table id="bkm">
+  <tr>
+    <th>
+        <label>
+        <input type="radio" name="bkm-category" value="bkm-browse-url">
+            指定URLへ移動
+        </label>
+    </th>
+    <td>
+        <input type="text" id="bkm-browse-url" class="bkm-input">
+        <button onclick="util.clear_this_text('bkm-browse-url')">Clear</button>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="btnarea">
+    <button id="bkm_create_btn" onclick="util.exec()">Create</button>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="codearea"><textarea id="bkm_code"></textarea><br>
+    <button onclick="util.clear_this_text('bkm_code')">Clear</button>
+    </td>
+  </tr>
+</table>
+</body>
+</html>
