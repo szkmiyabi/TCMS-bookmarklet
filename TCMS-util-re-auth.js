@@ -1,9 +1,11 @@
 /*-----------------------------------------------------
  *
- 	Tokushima CMS bookmarklet 基底クラス
+ 	再承認処理
  *
 ------------------------------------------------------*/
+
 javascript:(function(){
+	var projectID = "S51";
 	function TCMSUtil() {
 		this.d = document;
 		this.url = location.href;
@@ -198,11 +200,40 @@ javascript:(function(){
 				}
 			}
 
+		},
+		do_search: function(str) {
+			this.search_textbox.val
 		}
 	};
 
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
-	util.copy_tab();
-	
+	var pat00 = new RegExp(/\/cms\/(part_templates$|frames|article_pages)/);
+	var pat01 = new RegExp(/\/cms\/part_templates\/edit/);
+	if(pat00.test(util.url)) {
+		util.copy_tab();
+		util.menu_parts.click();
+	}
+	if(pat01.test(util.url)) {
+		util.auth_reset_btn.click();
+	}
+	var pat1 = new RegExp(/\/cms\/part_templates\/view/);
+	var pat2 = new RegExp(/\/cms\/(approvals$|approvals\?FormData=keep$)/);
+	var pat3 = new RegExp(/\/cms\/approvals\/part_template$/);
+	var pat4 = new RegExp(/\/cms\/approvals\/part_template_base$/);
+
+	if(pat1.test(util.url)) {
+		util.menu_auth.click();
+	}
+	if(pat2.test(util.url)) {
+		util.search_textbox.value = projectID;
+		util.click_btn_by_keywd("検索");
+	}
+	if(pat3.test(util.url)) {
+		util.click_btn_by_keywd("次へ");
+	}
+	if(pat4.test(util.url)) {
+		util.click_btn_by_keywd("承認する");
+	}
+
 })();
