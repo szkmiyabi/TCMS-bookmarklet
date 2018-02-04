@@ -1,9 +1,10 @@
 /*-----------------------------------------------------
  *
- 	Tokushima CMS bookmarklet 基底クラス
+ 	レイアウト設定を一発実施
  *
 ------------------------------------------------------*/
 javascript:(function(){
+	var customWidth="900";
 	function TCMSUtil() {
 		this.d = document;
 		this.url = location.href;
@@ -281,5 +282,7 @@ javascript:(function(){
 
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
-
+	util.layoutD.click();
+	util.page_width_text.value = customWidth;
+	util.layout_save_btn.click();
 })();

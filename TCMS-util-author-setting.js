@@ -1,9 +1,10 @@
 /*-----------------------------------------------------
  *
- 	Tokushima CMS bookmarklet 基底クラス
+ 	承認者設定を一発実施
  *
 ------------------------------------------------------*/
 javascript:(function(){
+	var tp="author2";var lv="last";
 	function TCMSUtil() {
 		this.d = document;
 		this.url = location.href;
@@ -280,6 +281,5 @@ javascript:(function(){
 	};
 
 	var util = new TCMSUtil();
-	/* --- Let it any method call --- */
-
+	util.do_author_select(tp, lv);
 })();
