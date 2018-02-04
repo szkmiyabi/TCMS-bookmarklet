@@ -6,7 +6,7 @@ javascript:(function(){
 		this.uploadpath = "/file/img/";
 		this.rootpath = "https://www.pref.tokushima.lg.jp";
 
-		this.menuWrap = this.d.getElementById("actions-sidebar").getElementsByClassName("side-nav").item(0);
+		this.menuWrap = this.d.getElementsByClassName("side-nav").item(0);
 		this.menuList = this.menuWrap.getElementsByTagName("li");
 		this.menu_sitemap = this.menuList.item(0).getElementsByTagName("a").item(0);
 		this.menu_page = this.menuList.item(1).getElementsByTagName("a").item(0);
