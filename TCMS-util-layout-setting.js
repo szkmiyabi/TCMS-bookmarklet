@@ -4,7 +4,7 @@
  *
 ------------------------------------------------------*/
 javascript:(function(){
-	var customWidth="900";
+	var cw="900";var ly="D";
 	function TCMSUtil() {
 		this.d = document;
 		this.url = location.href;
@@ -282,7 +282,7 @@ javascript:(function(){
 
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
-	util.layoutD.click();
-	util.page_width_text.value = customWidth;
+	eval("util.layout" + ly + ".click();");
+	util.page_width_text.value = cw;
 	util.layout_save_btn.click();
 })();

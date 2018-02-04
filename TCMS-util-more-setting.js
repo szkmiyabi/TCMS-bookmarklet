@@ -1,6 +1,6 @@
 /*-----------------------------------------------------
  *
- 	Tokushima CMS bookmarklet 基底クラス
+ 	フレーム基本設定の日付自動指定と詳細設定自動で開く
  *
 ------------------------------------------------------*/
 javascript:(function(){
@@ -334,5 +334,11 @@ javascript:(function(){
 
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
+	var nowdate = util.get_now_date();
+	var enddate = util.get_custom_date("9999-01-01");
+	util.display_now_date.value = nowdate;
+	util.display_start_date.value = nowdate;
+	util.display_end_date.value = enddate;
+	util.do_more_set_open();
 
 })();
