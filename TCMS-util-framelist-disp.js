@@ -1,6 +1,7 @@
 /*-----------------------------------------------------
  *
- 	Tokushima CMS bookmarklet 基底クラス
+ 	フレーム/ページ一覧のページ名,URL,ページIDの整形リスト
+ 	別タブ表示
  *
 ------------------------------------------------------*/
 javascript:(function(){
@@ -365,6 +366,6 @@ javascript:(function(){
 
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
-
+	util.disp_page_list_tab("\t");
 
 })();
