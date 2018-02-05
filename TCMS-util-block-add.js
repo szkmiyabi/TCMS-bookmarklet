@@ -1,9 +1,10 @@
 /*-----------------------------------------------------
  *
- 	Tokushima CMS bookmarklet 基底クラス
+ 	ブロックを指定して一発追加
  *
 ------------------------------------------------------*/
 javascript:(function(){
+	var bname="文章";
 	function TCMSUtil() {
 		this.d = document;
 		this.url = location.href;
@@ -442,7 +443,7 @@ javascript:(function(){
 			if(icn1 !== null) icn1.click();
 			var icn2 = this.d.getElementsByClassName("block-head").item(0);
 			if(icn2 !== null) icn2 = icn2.getElementsByClassName("edit-block click").item(0);
-			if(icn2 !== null) icn2.click();
+			if(icn2 !== null) icn2.click();			
 
 		},
 		click_btn_by_keywd: function(str) {
@@ -489,5 +490,6 @@ javascript:(function(){
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
 
+	util.do_block_add(bname);
 
 })();

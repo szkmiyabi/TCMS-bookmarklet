@@ -1,9 +1,10 @@
 /*-----------------------------------------------------
  *
- 	Tokushima CMS bookmarklet 基底クラス
+ 	パーツを指定して一発追加
  *
 ------------------------------------------------------*/
 javascript:(function(){
+	var pname="検索";
 	function TCMSUtil() {
 		this.d = document;
 		this.url = location.href;
@@ -489,5 +490,6 @@ javascript:(function(){
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
 
+	util.do_parts_add(pname);
 
 })();
