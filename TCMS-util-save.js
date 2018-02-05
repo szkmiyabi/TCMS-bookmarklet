@@ -1,6 +1,6 @@
 /*-----------------------------------------------------
  *
- 	Tokushima CMS bookmarklet 基底クラス
+ 	統合的な確定/保存処理 bookmarklet
  *
 ------------------------------------------------------*/
 javascript:(function(){
@@ -370,6 +370,11 @@ javascript:(function(){
 
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
+	var hst = new RegExp(/\/cms\/frames\/edit/);
+	if(hst.test(util.url)) {
+		if(util.commit_btn != null) util.commit_btn.click();
+		if(util.save_btn != null) util.save_btn.click();
+	}
 
 
 })();

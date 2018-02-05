@@ -1,6 +1,6 @@
 /*-----------------------------------------------------
  *
- 	Tokushima CMS bookmarklet 基底クラス
+ 	基本設定まで一気に移動し、詳細設定まで開く
  *
 ------------------------------------------------------*/
 javascript:(function(){
@@ -370,6 +370,15 @@ javascript:(function(){
 
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
+	var hst1 = new RegExp(/\/cms\/frames\/view/);
+	var hst2 = new RegExp(/\/cms\/frames\/edit/);
+
+	if(hst1.test(util.url)) util.edit_btn.click();
+	if(hst2.test(util.url)) {
+		if(util.basic_set_btn != null) util.basic_set_btn.click();
+		if(util.more_set_link != null) util.do_more_set_open();
+	}
+
 
 
 })();
