@@ -1,6 +1,6 @@
 /*-----------------------------------------------------
  *
- 	フレーム基本設定の日付自動指定と詳細設定自動で開く
+ 	フレーム基本設定の日付自動指定
  *
 ------------------------------------------------------*/
 javascript:(function(){
@@ -339,6 +339,5 @@ javascript:(function(){
 	util.display_now_date.value = nowdate;
 	util.display_start_date.value = nowdate;
 	util.display_end_date.value = enddate;
-	util.do_more_set_open();
 
 })();

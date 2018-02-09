@@ -1,6 +1,6 @@
 /*-----------------------------------------------------
  *
- 	基本設定まで一気に移動し、詳細設定まで開く
+ 	基本設定を一発で開く
  *
 ------------------------------------------------------*/
 javascript:(function(){
@@ -10,6 +10,12 @@ javascript:(function(){
 		this.selection = window.getSelection().toString();
 		this.uploadpath = "/file/img/";
 		this.rootpath = "https://www.pref.tokushima.lg.jp";
+
+		/* frameプレビュー画面の正規表現 */
+		this.cr_frame_preview_pat = new RegExp(/.*\/cms\/frames\/view/);
+		/* frame編集画面の正規表現 */
+		this.cr_frame_edit_pat = new RegExp(/.*\/cms\/frames\/edit/);
+
 
 		this.menuWrap = this.d.getElementsByClassName("side-nav").item(0);
 		this.menuList = this.menuWrap.getElementsByTagName("li");
@@ -49,6 +55,7 @@ javascript:(function(){
 			"S71": "45",
 		};
 
+
 		this.siteSelect = null;         /* サイト分類select */
 		try { this.siteSelect = this.d.getElementById("site-groups"); } catch(e) {}
 
@@ -79,12 +86,93 @@ javascript:(function(){
 		try { this.commit_btn = this.d.getElementsByClassName("set-base btn").item(0); } catch(e) {}
 		try { this.save_btn = this.d.getElementsByClassName("draft-save btn").item(0); } catch(e) {}
 
+		this.edit_end_btn = null;       /* 編集終了 ボタン */
+		try { this.edit_end_btn = this.d.getElementsByClassName("edit-end btn").item(0); } catch(e) {}
+
+		this.parts_add_btn = null;      /* パーツ追加 ボタン */
+		try { this.parts_add_btn = this.d.getElementsByClassName("add-parts btn").item(0); } catch(e) {}
+		this.partsSelect = null;        /* パーツ選択select */
+		this.partsOpts = null;          /* パーツ選択option */
+		try { this.partsSelect = this.d.getElementById("parts-list"); } catch(e) {}
+		try { this.partsOpts = this.partsSelect.getElementsByTagName("option"); } catch(e) {}
+		this.partsHash = {
+			"ノート": "1",
+			"タイトルリスト": "2",
+			"検索": "3",
+			"メニュー": "4",
+			"問い合わせ": "5",
+			"カレンダー": "7",
+			"アクセスランキング": "8",
+			"サイトマップ": "10",
+			"パンくずリスト": "12",
+			"関連ページ": "13",
+			"メールマガジン": "14",
+			"DIVタグパーツ": "15"
+		};
+
+		this.editAreaWrap = null;
+		this.layoutWrap = null;
+		this.layoutAreaItems = null;
+		this.editAreaDivs = null;
+		this.editArea = null;        /* 編集領域 */
+		try { this.editAreaWrap = this.d.getElementsByClassName("edit").item(0); } catch(e) {}
+		try { this.layoutWrap = this.editAreaWrap.getElementsByClassName("cms-layout").item(0); } catch(e) {}
+		try { this.layoutAreaItems = this.layoutWrap.getElementsByClassName("layout-area").item(0); } catch(e) {}
+		try { this.editAreaDivs = this.layoutAreaItems.getElementsByTagName("div"); } catch(e) {}
+		try {
+			for(var i=0; i<this.editAreaDivs.length; i++) {
+				var itm = this.editAreaDivs.item(i);
+				var attr = itm.getAttribute("data-mode");
+				if(attr === "edit") {
+					this.editArea = itm;
+					break;
+				}
+			}
+		} catch(e) {}
+
+		this.editAreaBtns = null;
+		this.editAreaBtnsCnt = null;
+		try { this.editAreaBtns = this.editArea.getElementsByClassName("add-block btn"); } catch(e) {}
+		try { this.editAreaBtnsCnt = this.editAreaBtns.length; } catch(e) {}
+		
+		this.block_add_btn = null;  /* ブロック追加 ボタン */
+		try { this.block_add_btn = this.editAreaBtns.item(this.editAreaBtnsCnt - 1); } catch(e) {}
+
+		this.blockSelectWrapDivs = null;
+		this.blockSelectWrapDivsCnt = null;
+		try { this.blockSelectWrapDivs = this.editArea.getElementsByClassName("note-block-area edit-area"); } catch(e) {}
+		try { this.blockSelectWrapDivsCnt = this.blockSelectWrapDivs.length; } catch(e) {}
+
+		this.blockSelectWrap = null;
+		this.blockSelect = null;
+		this.blockOpts = null;     /* ブロック選択select */
+		try { this.blockSelectWrap = this.blockSelectWrapDivs.item(this.blockSelectWrapDivsCnt - 1); } catch(e) {}
+		try { this.blockSelect = this.blockSelectWrap.getElementsByTagName("select").item(0); } catch(e) {}
+		try { this.blockOpts = this.blockSelect.getElementsByTagName("option"); } catch(e) {}
+		this.blockHash = {
+			"大見出し": "Heading/large",
+			"中見出し": "Heading/medium",
+			"小見出し": "Heading/small",
+			"文章": "sentence",
+			"画像": "image",
+			"添付ファイル": "attach",
+			"水平線": "horizontalline",
+			"リスト": "list",
+			"地図": "map",
+			"HTML": "html",
+			"表": "table",
+			"スライド": "slide",
+			"問い合わせ先": "contact",
+			"画像付き文章": "sentence_with_image"
+		};
+
 		this.auth_reset_btn = null;     /* 承認依頼/取り消し ボタン */
 		try { this.auth_reset_btn = this.d.getElementById("approval-request"); } catch(e) {}
 
-		this.more_set_link = null;      /* 基本設定 詳細設定の開閉リンク */
-		try { this.more_set_link = this.d.getElementsByClassName("open-close").item(0); } catch(e) {}
 
+		this.openCloseLinks = null;      /* 詳細設定の開閉リンク群 */
+		try { this.openCloseLinks = this.d.getElementsByClassName("open-close"); } catch(e) {}
+		
 		/* 基本設定 公開日付関連の部品群 */
 		this.display_start_date = null;
 		this.display_end_date = null;
@@ -141,8 +229,6 @@ javascript:(function(){
 			"last": "2"
 		};
 
-
-
 		/* フレーム/記事一覧 tableの部品群 */
 		this.listTblWrap = null;
 		this.listTbl = null;
@@ -151,7 +237,40 @@ javascript:(function(){
 
 	}
 	TCMSUtil.prototype = {
-		disp_page_list_tab(sep) {
+		do_click_more_set_link: function() {
+			this.openCloseLinks.item(0).click();
+		},
+		is_find_more_set_link: function() {
+			if(this.openCloseLinks.length != 0) return true;
+			else return false;
+		},
+		do_block_add: function(str) {
+			var val = this.blockHash[str];
+			for(var i=0; i<this.blockOpts.length; i++) {
+				var opt = this.blockOpts.item(i);
+				var cval = opt.getAttribute("value");
+				if(cval === val) {
+					this.blockSelect.selectedIndex = i;
+					opt.click();
+					break;
+				}
+			}
+			this.block_add_btn.click();
+		},
+		do_parts_add: function(str) {
+			var val = this.partsHash[str];
+			for(var i=0; i<this.partsOpts.length; i++) {
+				var opt = this.partsOpts.item(i);
+				var cval = opt.getAttribute("value");
+				if(cval === val) {
+					this.partsSelect.selectedIndex = i;
+					opt.click();
+					break;
+				}
+			}
+			this.parts_add_btn.click();
+		},
+		disp_page_list_tab: function(sep) {
 			var str = "<pre>";
 			var arr = this.get_page_list_arr();
 			for(var i=0; i<arr.length; i++) {
@@ -160,7 +279,7 @@ javascript:(function(){
 			str += "</pre>";
 			this.browse_new_tab(str);
 		},
-		get_page_list_arr() {
+		get_page_list_arr: function() {
 			var arr = new Array();
 			var tbl = this.listTbl;
 			var trs = tbl.rows;
@@ -338,7 +457,7 @@ javascript:(function(){
 			if(icn1 !== null) icn1.click();
 			var icn2 = this.d.getElementsByClassName("block-head").item(0);
 			if(icn2 !== null) icn2 = icn2.getElementsByClassName("edit-block click").item(0);
-			if(icn2 !== null) icn2.click();			
+			if(icn2 !== null) icn2.click();
 
 		},
 		click_btn_by_keywd: function(str) {
@@ -366,19 +485,29 @@ javascript:(function(){
 			var btm = Math.max.apply(null, datas);
 			window.scroll(0, btm);
 		},
+		parts_block_name_list: function() {
+			var str = "<pre>";
+			for(var key in this.partsHash) {
+				var val = this.partsHash[key];
+				str += key + "\t" + val + "\n";
+			}
+			str += "\n------------------------------\n\n";
+			for(var key in this.blockHash) {
+				var val = this.blockHash[key];
+				str += key + "\t" + val + "\n";
+			}
+			str += "</pre>";
+			this.browse_new_tab(str);
+		}
 	};
+
 
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
-	var hst1 = new RegExp(/\/cms\/frames\/view/);
-	var hst2 = new RegExp(/\/cms\/frames\/edit/);
-
-	if(hst1.test(util.url)) util.edit_btn.click();
-	if(hst2.test(util.url)) {
+	if(util.cr_frame_preview_pat.test(util.url)) util.edit_btn.click();
+	if(util.cr_frame_edit_pat.test(util.url)) {
 		if(util.basic_set_btn != null) util.basic_set_btn.click();
-		if(util.more_set_link != null) util.do_more_set_open();
+		if(util.is_find_more_set_link()) util.do_click_more_set_link();
 	}
-
-
 
 })();

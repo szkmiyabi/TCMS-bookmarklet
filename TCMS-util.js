@@ -11,6 +11,12 @@ javascript:(function(){
 		this.uploadpath = "/file/img/";
 		this.rootpath = "https://www.pref.tokushima.lg.jp";
 
+		/* frameプレビュー画面の正規表現 */
+		this.cr_frame_preview_pat = new RegExp(/.*\/cms\/frames\/view/);
+		/* frame編集画面の正規表現 */
+		this.cr_frame_edit_pat = new RegExp(/.*\/cms\/frames\/edit/);
+
+
 		this.menuWrap = this.d.getElementsByClassName("side-nav").item(0);
 		this.menuList = this.menuWrap.getElementsByTagName("li");
 		this.menu_sitemap = this.menuList.item(0).getElementsByTagName("a").item(0);
@@ -48,6 +54,7 @@ javascript:(function(){
 			"S62": "44",
 			"S71": "45",
 		};
+
 
 		this.siteSelect = null;         /* サイト分類select */
 		try { this.siteSelect = this.d.getElementById("site-groups"); } catch(e) {}
@@ -162,9 +169,10 @@ javascript:(function(){
 		this.auth_reset_btn = null;     /* 承認依頼/取り消し ボタン */
 		try { this.auth_reset_btn = this.d.getElementById("approval-request"); } catch(e) {}
 
-		this.more_set_link = null;      /* 基本設定 詳細設定の開閉リンク */
-		try { this.more_set_link = this.d.getElementsByClassName("open-close").item(0); } catch(e) {}
 
+		this.openCloseLinks = null;      /* 詳細設定の開閉リンク群 */
+		try { this.openCloseLinks = this.d.getElementsByClassName("open-close"); } catch(e) {}
+		
 		/* 基本設定 公開日付関連の部品群 */
 		this.display_start_date = null;
 		this.display_end_date = null;
@@ -229,6 +237,13 @@ javascript:(function(){
 
 	}
 	TCMSUtil.prototype = {
+		do_click_more_set_link: function() {
+			this.openCloseLinks.item(0).click();
+		},
+		is_find_more_set_link: function() {
+			if(this.openCloseLinks.length != 0) return true;
+			else return false;
+		},
 		do_block_add: function(str) {
 			var val = this.blockHash[str];
 			for(var i=0; i<this.blockOpts.length; i++) {

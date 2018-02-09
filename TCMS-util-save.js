@@ -1,6 +1,6 @@
 /*-----------------------------------------------------
  *
- 	統合的な確定/保存処理 bookmarklet
+ 	Tokushima CMS bookmarklet 基底クラス
  *
 ------------------------------------------------------*/
 javascript:(function(){
@@ -79,6 +79,86 @@ javascript:(function(){
 		try { this.commit_btn = this.d.getElementsByClassName("set-base btn").item(0); } catch(e) {}
 		try { this.save_btn = this.d.getElementsByClassName("draft-save btn").item(0); } catch(e) {}
 
+		this.edit_end_btn = null;       /* 編集終了 ボタン */
+		try { this.edit_end_btn = this.d.getElementsByClassName("edit-end btn").item(0); } catch(e) {}
+
+		this.parts_add_btn = null;      /* パーツ追加 ボタン */
+		try { this.parts_add_btn = this.d.getElementsByClassName("add-parts btn").item(0); } catch(e) {}
+		this.partsSelect = null;        /* パーツ選択select */
+		this.partsOpts = null;          /* パーツ選択option */
+		try { this.partsSelect = this.d.getElementById("parts-list"); } catch(e) {}
+		try { this.partsOpts = this.partsSelect.getElementsByTagName("option"); } catch(e) {}
+		this.partsHash = {
+			"ノート": "1",
+			"タイトルリスト": "2",
+			"検索": "3",
+			"メニュー": "4",
+			"問い合わせ": "5",
+			"カレンダー": "7",
+			"アクセスランキング": "8",
+			"サイトマップ": "10",
+			"パンくずリスト": "12",
+			"関連ページ": "13",
+			"メールマガジン": "14",
+			"DIVタグパーツ": "15"
+		};
+
+		this.editAreaWrap = null;
+		this.layoutWrap = null;
+		this.layoutAreaItems = null;
+		this.editAreaDivs = null;
+		this.editArea = null;        /* 編集領域 */
+		try { this.editAreaWrap = this.d.getElementsByClassName("edit").item(0); } catch(e) {}
+		try { this.layoutWrap = this.editAreaWrap.getElementsByClassName("cms-layout").item(0); } catch(e) {}
+		try { this.layoutAreaItems = this.layoutWrap.getElementsByClassName("layout-area").item(0); } catch(e) {}
+		try { this.editAreaDivs = this.layoutAreaItems.getElementsByTagName("div"); } catch(e) {}
+		try {
+			for(var i=0; i<this.editAreaDivs.length; i++) {
+				var itm = this.editAreaDivs.item(i);
+				var attr = itm.getAttribute("data-mode");
+				if(attr === "edit") {
+					this.editArea = itm;
+					break;
+				}
+			}
+		} catch(e) {}
+
+		this.editAreaBtns = null;
+		this.editAreaBtnsCnt = null;
+		try { this.editAreaBtns = this.editArea.getElementsByClassName("add-block btn"); } catch(e) {}
+		try { this.editAreaBtnsCnt = this.editAreaBtns.length; } catch(e) {}
+		
+		this.block_add_btn = null;  /* ブロック追加 ボタン */
+		try { this.block_add_btn = this.editAreaBtns.item(this.editAreaBtnsCnt - 1); } catch(e) {}
+
+		this.blockSelectWrapDivs = null;
+		this.blockSelectWrapDivsCnt = null;
+		try { this.blockSelectWrapDivs = this.editArea.getElementsByClassName("note-block-area edit-area"); } catch(e) {}
+		try { this.blockSelectWrapDivsCnt = this.blockSelectWrapDivs.length; } catch(e) {}
+
+		this.blockSelectWrap = null;
+		this.blockSelect = null;
+		this.blockOpts = null;     /* ブロック選択select */
+		try { this.blockSelectWrap = this.blockSelectWrapDivs.item(this.blockSelectWrapDivsCnt - 1); } catch(e) {}
+		try { this.blockSelect = this.blockSelectWrap.getElementsByTagName("select").item(0); } catch(e) {}
+		try { this.blockOpts = this.blockSelect.getElementsByTagName("option"); } catch(e) {}
+		this.blockHash = {
+			"大見出し": "Heading/large",
+			"中見出し": "Heading/medium",
+			"小見出し": "Heading/small",
+			"文章": "sentence",
+			"画像": "image",
+			"添付ファイル": "attach",
+			"水平線": "horizontalline",
+			"リスト": "list",
+			"地図": "map",
+			"HTML": "html",
+			"表": "table",
+			"スライド": "slide",
+			"問い合わせ先": "contact",
+			"画像付き文章": "sentence_with_image"
+		};
+
 		this.auth_reset_btn = null;     /* 承認依頼/取り消し ボタン */
 		try { this.auth_reset_btn = this.d.getElementById("approval-request"); } catch(e) {}
 
@@ -141,8 +221,6 @@ javascript:(function(){
 			"last": "2"
 		};
 
-
-
 		/* フレーム/記事一覧 tableの部品群 */
 		this.listTblWrap = null;
 		this.listTbl = null;
@@ -151,7 +229,47 @@ javascript:(function(){
 
 	}
 	TCMSUtil.prototype = {
-		disp_page_list_tab(sep) {
+		do_click_commit_btn: function() {
+			if(this.commit_btn != null) this.commit_btn.click();
+		},
+		is_find_commit_btn: function() {
+			if(this.commit_btn != null)  return true;
+			else return false;
+		},
+		do_click_save_btn: function() {
+			if(this.save_btn != null) this.save_btn.click();
+		},
+		is_find_save_btn: function() {
+			if(this.save_btn != null) return true;
+			else return false;
+		},
+		do_block_add: function(str) {
+			var val = this.blockHash[str];
+			for(var i=0; i<this.blockOpts.length; i++) {
+				var opt = this.blockOpts.item(i);
+				var cval = opt.getAttribute("value");
+				if(cval === val) {
+					this.blockSelect.selectedIndex = i;
+					opt.click();
+					break;
+				}
+			}
+			this.block_add_btn.click();
+		},
+		do_parts_add: function(str) {
+			var val = this.partsHash[str];
+			for(var i=0; i<this.partsOpts.length; i++) {
+				var opt = this.partsOpts.item(i);
+				var cval = opt.getAttribute("value");
+				if(cval === val) {
+					this.partsSelect.selectedIndex = i;
+					opt.click();
+					break;
+				}
+			}
+			this.parts_add_btn.click();
+		},
+		disp_page_list_tab: function(sep) {
 			var str = "<pre>";
 			var arr = this.get_page_list_arr();
 			for(var i=0; i<arr.length; i++) {
@@ -160,7 +278,7 @@ javascript:(function(){
 			str += "</pre>";
 			this.browse_new_tab(str);
 		},
-		get_page_list_arr() {
+		get_page_list_arr: function() {
 			var arr = new Array();
 			var tbl = this.listTbl;
 			var trs = tbl.rows;
@@ -338,7 +456,7 @@ javascript:(function(){
 			if(icn1 !== null) icn1.click();
 			var icn2 = this.d.getElementsByClassName("block-head").item(0);
 			if(icn2 !== null) icn2 = icn2.getElementsByClassName("edit-block click").item(0);
-			if(icn2 !== null) icn2.click();			
+			if(icn2 !== null) icn2.click();
 
 		},
 		click_btn_by_keywd: function(str) {
@@ -366,15 +484,26 @@ javascript:(function(){
 			var btm = Math.max.apply(null, datas);
 			window.scroll(0, btm);
 		},
+		parts_block_name_list: function() {
+			var str = "<pre>";
+			for(var key in this.partsHash) {
+				var val = this.partsHash[key];
+				str += key + "\t" + val + "\n";
+			}
+			str += "\n------------------------------\n\n";
+			for(var key in this.blockHash) {
+				var val = this.blockHash[key];
+				str += key + "\t" + val + "\n";
+			}
+			str += "</pre>";
+			this.browse_new_tab(str);
+		}
 	};
 
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
-	var hst = new RegExp(/\/cms\/frames\/edit/);
-	if(hst.test(util.url)) {
-		if(util.commit_btn != null) util.commit_btn.click();
-		if(util.save_btn != null) util.save_btn.click();
-	}
+	if(util.is_find_commit_btn()) util.do_click_commit_btn();
+	if(util.is_find_save_btn()) util.do_click_save_btn();
 
 
 })();
