@@ -378,19 +378,17 @@ javascript:(function(){
 		},
 		upload_img_list: function(type) {
 			var str = "";
-			var rfpat = new RegExp(/(\()(.+?)(\))/);
-			var src = this.d.getElementById("upload-image-list");
-			var trs = src.rows;
-			for(var i=0; i<trs.length; i++) {
-				var tr = trs.item(i);
-				var td = tr.cells.item(0).textContent;
-				var tmp = td.split(" ");
-				if(tmp.length < 1) return;
-				var v1 = tmp[0];
-				var v2 = tmp[1];
-				if(!rfpat.test(v2)) return;
-				var mt = v2.match(rfpat);
-				v2 = mt[2];
+			var linepat = new RegExp("([A-Za-z0-9_\\-\\.\\,]+ [\\(]+.+[\\)]+)","g");
+			var fpat = new RegExp(/(.+?)( \()(.+?)(\))/);
+			if(typeof this.selection === "undefined" || this.selection === null) return;
+			if(!linepat.test(this.selection)) return;
+			var results = this.selection.match(linepat);
+			for(var rs in results) {
+				var line = results[rs];
+				if(!fpat.test(line)) continue;
+				var tmp = line.match(fpat);
+				var v1 = tmp[1];
+				var v2 = tmp[3];
 				str += "<pre>" + v1 + "\t" + v2 + "\n" + "</pre>";
 			}
 			if(type === "popup") alert(str);
