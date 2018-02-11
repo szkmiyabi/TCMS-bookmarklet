@@ -1,9 +1,11 @@
 /*-----------------------------------------------------
  *
- 	Tokushima CMS bookmarklet 基底クラス
+ 	アップロードPathおよびアップロード画像一覧の表示
  *
 ------------------------------------------------------*/
 javascript:(function(){
+	var uit="popup";/* popup or tab */
+	var opt="path";/* list or path */
 	function TCMSUtil() {
 		this.d = document;
 		this.url = location.href;
@@ -503,6 +505,7 @@ javascript:(function(){
 
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
-
+	if(opt==="path") util.upload_img_path(uit);
+	if(opt==="list") util.upload_img_list(uit);
 
 })();
