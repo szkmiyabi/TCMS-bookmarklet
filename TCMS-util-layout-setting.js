@@ -4,7 +4,14 @@
  *
 ------------------------------------------------------*/
 javascript:(function(){
-	var cw="900";var ly="D";
+	var wd="900";
+	var ly="D";
+	var c1="area-2:250";
+	var c2="area-3:650";
+	var c3="";
+	var unt="px";
+	var asv=false;
+
 	function TCMSUtil() {
 		this.d = document;
 		this.url = location.href;
@@ -85,7 +92,7 @@ javascript:(function(){
 		try { this.auth_reset_btn = this.d.getElementById("approval-request"); } catch(e) {}
 
 		this.layoutPane = null;
-		this.layoutPaneInps = null;
+		this.layoutPaneInps = null; /* layoutPaneの全input要素群 */
 		try { this.layoutPane = this.d.getElementsByClassName("cmsbase layout-setting").item(0); } catch(e) {}
 		try { this.layoutPaneInps = this.layoutPane.getElementsByTagName("input"); } catch(e) {}
 		this.layoutA = null;
@@ -113,6 +120,9 @@ javascript:(function(){
 		} catch(e) {}
 		try { this.layout_save_btn = this.layoutPane.getElementsByClassName("ok-layout btn").item(0); } catch(e) {}
 
+		this.areaSizeTbl = null; /* エリアサイズ設定table */
+		try { this.areaSizeTbl = this.d.getElementById("area-size"); } catch(e) {}
+
 		this.author1Check = null;
 		this.author2Check = null;
 		this.author3Check = null;
@@ -132,6 +142,54 @@ javascript:(function(){
 
 	}
 	TCMSUtil.prototype = {
+		do_col_width_select_enter: function(layout, val) {
+			var unitHash = {"px":"1", "percent":"2"};
+			var skey = unitHash[val];
+			var tarrow = null;
+			var tarcell = null;
+			var trs = this.areaSizeTbl.rows;
+			if(layout==="D") {
+				tarrow = trs.item(3);
+				tarcell = tarrow.cells.item(5);
+			} else if(layout==="E") {
+				tarrow = trs.item(5);
+				tarcell = tarrow.cells.item(5);
+			} else if(layout==="F") {
+				tarrow = trs.item(7);
+				tarcell = tarrow.cells.item(5);
+			}
+			var sel = tarcell.getElementsByTagName("select").item(0);
+			var opts = sel.getElementsByTagName("option");
+			for(var i=0; i<opts.length; i++) {
+				var opt = opts.item(i);
+				if(opt.getAttribute("value")===skey) {
+					sel.selectedIndex = i;
+					sel.click();
+					break;
+				}
+			}
+		},
+		do_col_width_input_enter: function(layout, key, val) {
+			var tarrow = null;
+			var tarcell = null;
+			var trs = this.areaSizeTbl.rows;
+			if(layout==="D") {
+				tarrow = trs.item(3);
+				if(key === "area-2") tarcell = tarrow.cells.item(2);
+				else if(key === "area-3") tarcell = tarrow.cells.item(3);
+			} else if(layout==="E") {
+				tarrow = trs.item(5);
+				if(key === "area-2") tarcell = tarrow.cells.item(2);
+				else if(key === "area-3") tarcell = tarrow.cells.item(3);
+			} else if(layout==="F") {
+				tarrow = trs.item(7);
+				if(key === "area-2") tarcell = tarrow.cells.item(2);
+				else if(key === "area-3") tarcell = tarrow.cells.item(3);
+				else if(key === "area-4") tarcell = tarrow.cells.item(4);
+			}
+			var inp = tarcell.getElementsByTagName("input").item(0);
+			inp.value = val;
+		},
 		do_author_select: function(str, val) {
 			if(str === "author1") {
 				this.author1Check.click();
@@ -263,7 +321,7 @@ javascript:(function(){
 			if(icn1 !== null) icn1.click();
 			var icn2 = this.d.getElementsByClassName("block-head").item(0);
 			if(icn2 !== null) icn2 = icn2.getElementsByClassName("edit-block click").item(0);
-			if(icn2 !== null) icn2.click();			
+			if(icn2 !== null) icn2.click();
 
 		},
 		click_btn_by_keywd: function(str) {
@@ -283,6 +341,16 @@ javascript:(function(){
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
 	eval("util.layout" + ly + ".click();");
-	util.page_width_text.value = cw;
-	util.layout_save_btn.click();
+	util.page_width_text.value = wd;
+	var tmp1 = c1.split(":");
+	var tmp2 = c2.split(":");
+	var tmp3 = null;
+	if(c3 !== "") tmp3 = c3.split(":");
+	if(tmp1.length < 1 || tmp2.length < 1) return;
+	util.do_col_width_input_enter(ly, tmp1[0], tmp1[1]);
+	util.do_col_width_input_enter(ly, tmp2[0], tmp2[1]);
+	if(tmp3 !== null) util.do_col_width_input_enter(ly, tmp3[0], tmp3[1]);
+	util.do_col_width_select_enter(ly, unt);
+	if(asv) util.layout_save_btn.click();
+
 })();
