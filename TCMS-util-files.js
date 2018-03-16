@@ -1,6 +1,6 @@
 /*-----------------------------------------------------
  *
- 	アップロードCSSの表示
+ 	アップロードファイルの表示
  *
 ------------------------------------------------------*/
 javascript:(function(){
@@ -10,6 +10,7 @@ javascript:(function(){
 		this.selection = window.getSelection().toString();
 		this.uploadpath = "/file/img/";
 		this.csspath = "/file/css/";
+		this.jspath = "/file/js/";
 		this.rootpath = "https://www.pref.tokushima.lg.jp";
 
 		/* frameプレビュー画面の正規表現 */
@@ -404,14 +405,20 @@ javascript:(function(){
 			if(type === "popup") alert(this.uploadpath + str);
 			else this.browse_new_tab(this.uploadpath + str);
 		},
-		browse_upload_css: function() {
+		browse_upload_file: function() {
 			var rfpat = new RegExp(/(\()(.+?)(\))/);
+			var csspat = new RegExp(/\.css/);
+			var impat = new RegExp(/(\.jpg|\.gif|\.png)/);
+			var jspat = new RegExp(/\.js/);
 			var str = "";
 			if(typeof this.selection === "undefined" || this.selection === null) return;
 			if(!rfpat.test(this.selection)) return;
 			str = this.selection.match(rfpat)[2];
-			var cssfullpath = this.rootpath + this.csspath + str;
-			window.open(cssfullpath, "_blank");
+			var bspath = this.rootpath;
+			if(csspat.test(str)) bspath += this.csspath + str;
+			else if(impat.test(str)) bspath += this.uploadpath + str;
+			else if(jspat.test(str)) bspath += this.jspath + str;
+			window.open(bspath, "_blank");
 		},
 		get_tree_text: function(line_end) {
 			var str = "";
@@ -511,6 +518,6 @@ javascript:(function(){
 
 	var util = new TCMSUtil();
 	/* --- Let it any method call --- */
-	util.browse_upload_css();
+	util.browse_upload_file();
 
 })();
