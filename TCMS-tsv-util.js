@@ -4,6 +4,7 @@
  *
 ------------------------------------------------------*/
 javascript:(function(){
+	var wlink=true; /*-true, false-*/
 	function TCMSUtil() {
 		this.d = document;
 		this.url = location.href;
@@ -139,6 +140,18 @@ javascript:(function(){
 	TCMSUtil.prototype = {
 
 		/* --- フレーム/記事一覧表を別タブ表示 --- */
+		disp_page_list_tab_wlink: function() {
+			var str = "<pre>";
+			var arr = this.get_page_list_arr();
+			for(var i=0; i<arr.length; i++) {
+				str += "<div>";
+				str += "<p>" + arr[i][0] + "</p>";
+				str += '<p><a href="' + arr[i][1] + '" target="_blank">' + arr[i][1] + "</a></p>";
+				str += '<p><a href="' + arr[i][2] + '" target="_blank">' + arr[i][2] + "</a></p>";
+				str += "</div>";
+			}
+			this.browse_new_tab_wlink(str);
+		},
 		disp_page_list_tab: function(sep) {
 			var str = "<pre>";
 			var arr = this.get_page_list_arr();
@@ -168,6 +181,18 @@ javascript:(function(){
 			return arr;
 		},
 		/* --- パーツ/テンプレート一覧表を別タブ表示 --- */
+		disp_template_list_tab_wlink: function() {
+			var str = "";
+			var arr = this.get_template_list_arr();
+			for(var i=0; i<arr.length; i++) {
+				str += "<div>";
+				str += "<p>" + arr[i][0] + "</p>";
+				str += '<p><a href="' + arr[i][1] + '" target="_blank">' + arr[i][1] + "</a></p>";
+				str += '<p><a href="' + arr[i][2] + '" target="_blank">' + arr[i][2] + "</a></p>";
+				str += "</div>";
+			}
+			this.browse_new_tab_wlink(str);
+		},
 		disp_template_list_tab: function(sep) {
 			var str = "<pre>";
 			var arr = this.get_template_list_arr();
@@ -187,16 +212,31 @@ javascript:(function(){
 				if(i < 1) continue;
 				var tr = trs.item(i);
 				var cdata = tr.cells.item(1);
-				var parts_name = cdata.getElementsByTagName("a").item(0).textContent;
-				var parts_link = this.rootpath + cdata.getElementsByTagName("a").item(0).getAttribute("href");
-				var cv1 = parts_name;
-				var cv2 = parts_link;
-				arr[j] = [cv1, cv2];
+				var tmpl_name = cdata.getElementsByTagName("a").item(0).textContent;
+				var tmpl_link = this.rootpath + cdata.getElementsByTagName("a").item(0).getAttribute("href");
+				var cdata2 = tr.cells.item(tr.cells.length - 1);
+				var tmpl_edit_link = this.rootpath + cdata2.getElementsByTagName("a").item(0).getAttribute("href");
+				var cv1 = tmpl_name;
+				var cv2 = tmpl_link;
+				var cv3 = tmpl_edit_link;
+				arr[j] = [cv1, cv2, cv3];
 				j++;
 			}
 			return arr;
 		},
 		/* --- サイトマップ一覧別タブ表示 --- */
+		disp_sitemap_list_tab_wlink: function() {
+			var str = "";
+			var arr = this.get_sitemap_list_arr();
+			for(var i=0; i<arr.length; i++) {
+				str += "<div>";
+				str += "<p>" + arr[i][0] + "</p>";
+				str += '<p><a href="' + arr[i][1] + '" target="_blank">' + arr[i][1] + "</a></p>";
+				str += '<p><a href="' + arr[i][2] + '" target="_blank">' + arr[i][2] + "</a></p>";
+				str += "</div>";
+			}
+			this.browse_new_tab_wlink(str);
+		},
 		disp_sitemap_list_tab: function(sep) {
 			var str = "<pre>";
 			var arr = this.get_sitemap_list_arr();
@@ -256,6 +296,26 @@ javascript:(function(){
 			nwd.writeln('</body>');
 			nwd.writeln('</html>');
 		},
+		/* --- 別タブ表示, frex --- */
+		browse_new_tab_wlink: function(str) {
+			var nwd = window.open("","_blank").document;
+			nwd.writeln('<DOCTYPE html>');
+			nwd.writeln('<html lang="ja">');
+			nwd.writeln('<head><meta charset="utf-8">');
+			nwd.writeln('<title>BrNewTab</title>');
+			nwd.writeln('<style>body{font-family:"メイリオ",Meiryo,sans-serif;}');
+			nwd.writeln('.flex-table div { display: flex; }');
+			nwd.writeln('.flex-table div p { margin-right: 25px; }');
+			nwd.writeln('.flex-table div p:last-child { margin-right: none; }');
+			nwd.writeln('</style>');
+			nwd.writeln('</head>');
+			nwd.writeln('<body>');
+			nwd.writeln('<section class="flex-table">');
+			nwd.writeln(str);
+			nwd.writeln('</section>');
+			nwd.writeln('</body>');
+			nwd.writeln('</html>');
+		},
 		/* --- upload画像一覧を表示 --- */
 		upload_img_list: function(type) {
 			var str = "";
@@ -292,11 +352,14 @@ javascript:(function(){
 	var sep = "\t";
 	var url = util.url.trim();
 	if(util.article_pat.test(url) || util.frame_pat.test(url)) {
-		util.disp_page_list_tab(sep);
+		if(wlink) util.disp_page_list_tab_wlink();
+		else util.disp_page_list_tab(sep);
 	} else if(util.parts_template_pat.test(url) || util.page_template_pat.test(url)) {
-		util.disp_template_list_tab(sep);
+		if(wlink) util.disp_template_list_tab_wlink();
+		else util.disp_template_list_tab(sep);
 	} else if(util.sitemap_pat.test(url)) {
-		util.disp_sitemap_list_tab(sep);
+		if(wlink) util.disp_sitemap_list_tab_wlink();
+		else util.disp_sitemap_list_tab(sep);
 	}
 
 })();
