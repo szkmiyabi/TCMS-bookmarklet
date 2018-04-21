@@ -16,22 +16,22 @@ javascript:(function(){
 		this.sitemap_pat = new RegExp(/(.*)(\/cms\/site_maps\/)(frame$|page)/);
 
 		/* フレーム画面の正規表現 */
-		this.frame_pat = new RegExp(/.*\/cms\/frames$/);
+		this.frame_pat = new RegExp(/(.*)(\/cms\/)(frames$|frames\?)/);
 		this.frame_preview_pat = new RegExp(/.*\/cms\/frames\/view/);
 		this.frame_edit_pat = new RegExp(/.*\/cms\/frames\/edit/);
 
 		/* 記事画面の正規表現 */
-		this.article_pat = new RegExp(/.*\/cms\/article_pages$/);
+		this.article_pat = new RegExp(/(.*)(\/cms\/)(article_pages$|article_pages\?)/);
 		this.article_preview_pat = new RegExp(/.*\/cms\/article_pages\/view/);
 		this.article_edit_pat = new RegExp(/.*\/cms\/article_pages\/edit/);
 
 		/* ページテンプレート画面正規表現 */
-		this.page_template_pat = new RegExp(/.*\/cms\/templates$/);
+		this.page_template_pat = new RegExp(/(.*)(\/cms\/)(templates$|templates\?)/);
 		this.page_template_preview_pat = new RegExp(/.*\/cms\/templates\/view/);
 		this.page_template_edit_pat = new RegExp(/.*\/cms\/templates\/edit/);
 
 		/* パーツテンプレート画面正規表現 */
-		this.parts_template_pat = new RegExp(/.*\/cms\/part_templates$/);
+		this.parts_template_pat = new RegExp(/(.*)(\/cms\/)(part_templates$|part_templates\?)/);
 		this.parts_template_preview_pat = new RegExp(/.*\/cms\/part_templates\/view/);
 		this.parts_template_edit_pat = new RegExp(/.*\/cms\/part_templates\/edit/);
 
