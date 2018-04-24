@@ -154,9 +154,10 @@ javascript:(function(){
 		},
 		disp_page_list_tab: function(sep) {
 			var str = "<pre>";
+			str += "タイトル" + sep + "QID" + sep + "プレビューURL" + sep + "PID" + "\n";
 			var arr = this.get_page_list_arr();
 			for(var i=0; i<arr.length; i++) {
-				str += arr[i][0] + sep + arr[i][1] + sep + arr[i][2] + "\n";
+				str += arr[i][0] + sep + this.get_pid(arr[i][1]) + sep + arr[i][1] + sep + arr[i][2] + "\n";
 			}
 			str += "</pre>";
 			this.browse_new_tab(str);
@@ -195,9 +196,10 @@ javascript:(function(){
 		},
 		disp_template_list_tab: function(sep) {
 			var str = "<pre>";
+			str += "タイトル" + sep + "QID" + sep + "プレビューURL" + "\n";
 			var arr = this.get_template_list_arr();
 			for(var i=0; i<arr.length; i++) {
-				str += arr[i][0] + sep + arr[i][1] + "\n";
+				str += arr[i][0] + sep + this.get_pid(arr[i][1]) + sep + arr[i][1] + "\n";
 			}
 			str += "</pre>";
 			this.browse_new_tab(str);
@@ -239,9 +241,10 @@ javascript:(function(){
 		},
 		disp_sitemap_list_tab: function(sep) {
 			var str = "<pre>";
+			str += "タイトル" + sep + "QID" + sep + "プレビューURL" + sep + "編集URL" + "\n";
 			var arr = this.get_sitemap_list_arr();
 			for(var i=0; i<arr.length; i++) {
-				str += arr[i][0] + sep + arr[i][1] + sep + arr[i][2] + "\n";
+				str += arr[i][0] + sep + this.get_pid(arr[i][1]) + sep + arr[i][1] + sep + arr[i][2] + "\n";
 			}
 			str += "</pre>";
 			this.browse_new_tab(str);
@@ -315,6 +318,12 @@ javascript:(function(){
 			nwd.writeln('</section>');
 			nwd.writeln('</body>');
 			nwd.writeln('</html>');
+		},
+		/* --- pidを抽出 --- */
+		get_pid: function(str) {
+			var pat = new RegExp(/(\?id=)([0-9]+)/);
+			if(!pat.test(str)) return "";
+			return str.match(pat)[2];
 		},
 		/* --- upload画像一覧を表示 --- */
 		upload_img_list: function(type) {
