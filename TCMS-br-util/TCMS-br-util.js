@@ -1,5 +1,5 @@
 javascript:(function(){
-  var d = window.open("_blank").document;
+  var d = window.open().document;
   d.writeln('<!DOCTYPE html>');
   d.writeln('<html lang="ja">');
   d.writeln('<head>');
