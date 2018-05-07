@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <style>
+  * { font-family: "メイリオ",Meiryo,sans-serif; }
+  h1 { font-size: 1.65em; }
+  button, textarea {
+    border-radius: 5px;
+  }
+  #text-body {
+    width: 650px;
+    height: 10em;
+  }
+  </style>
+  <script>
+  function replacer(str) {
+    return str.replace(/(\r\n|\r|\n)/g, "【TCMS:br】");
+  }
+  function do_func() {
+    var obj = document.getElementById("text-body");
+    var tx = obj.value;
+    obj.value = replacer(tx);
+  }
+  function reset_func() {
+    document.getElementById("text-body").value = "";
+  }
+  </script>
+</head>
+<body>
+  <h1>TCMS改行タグ置換ツール</h1>
+  <p>処理したい文章を入力してください。</p>
+  <textarea id="text-body">
+  </textarea>
+  <br>
+  <button id="do-btn" onclick="do_func()">処理実行</button>
+  <button id="reset-btn" onclick="reset_func()">クリア</button>
+</body>
+</html>
