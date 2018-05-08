@@ -29,6 +29,10 @@ javascript:(function(){
   nd.writeln('function ht() {');
   nd.writeln('return document.getElementById("hint");');
   nd.writeln('}');
+  nd.writeln('function do_area_btn_hint() {');
+  nd.writeln('sc().value = "#[name]";');
+  nd.writeln('ht().innerHTML = "[name]を階やエリアにちなんだアンカー名にしてください。<br>（※注）[name]の部分は、先頭に「#」が付いていることから、ページ内リンク(アンカー)になるため、先頭に数値は使えません。「1F」なら「F1」にするなど前後を入れ替えてください。";');
+  nd.writeln('}');
   nd.writeln('function do_h2_anchor() {');
   nd.writeln('sc().value = \'<span id="[name]"></span>\';');
   nd.writeln('ht().innerHTML = "[name]を階やエリアにちなんだアンカー名にしてください。<br>（※注）[name]の部分は、id属性値になるので先頭に数値は使えません。「1F」なら「F1」にするなど前後を入れ替えてください。また、id属性値は必ず半角英数字を使ってください。";');
@@ -53,6 +57,10 @@ javascript:(function(){
   nd.writeln('sc().value = \'<span id="[aname]"></span>\';');
   nd.writeln('ht().innerHTML = "[aname]は、このアンカーへの移動元である黄／青バルーンのhref属性値の「#」を取り除いた文字列と同じにしてください。";');
   nd.writeln('}');
+  nd.writeln('function do_image_bk_hint() {');
+  nd.writeln('sc().value = "bukken-detail-pic";');
+  nd.writeln('ht().innerHTML = "";');
+  nd.writeln('}');
   nd.writeln('function do_clear() {');
   nd.writeln('sc().value = "";');
   nd.writeln('ht().innerHTML = "";');
@@ -61,12 +69,14 @@ javascript:(function(){
   nd.writeln('</head>');
   nd.writeln('<body>');
   nd.writeln('<h1>物件詳細写真ページ移行作業支援ツール</h1>');
+  nd.writeln('<button onclick="do_area_btn_hint()">階・エリアボタンのリンク設定は？</button>');
   nd.writeln('<button onclick="do_h2_anchor()">中見出しのアンカーを書く</button><br>');
   nd.writeln('<button onclick="do_divtag()">マップ画像を包むDIVタグを書く</button>');
   nd.writeln('<button onclick="do_img_tag()">マップ画像のIMGタグを書く</button><br>');
   nd.writeln('<button onclick="do_yellow_baloon()">黄色のバルーンを書く</button>');
   nd.writeln('<button onclick="do_blue_baloon()">青色のバルーンを書く</button><br>');
   nd.writeln('<button onclick="do_h3_anchor()">小見出しのアンカーを書く</button>');
+  nd.writeln('<button onclick="do_image_bk_hint()">写真ブロックのクラス名は？</button>');
   nd.writeln('<textarea id="srccode">');
   nd.writeln('</textarea>');
   nd.writeln('<br>');
