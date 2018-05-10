@@ -39,11 +39,11 @@ javascript:(function(){
   nd.writeln('}');
   nd.writeln('function do_divtag() {');
   nd.writeln('sc().value = \'<div style="width: 600px; position: relative; margin: 0 auto 15px auto;">\\n\\n</div>\';');
-  nd.writeln('ht().innerHTML = "マップの画像幅が600pxでないなら、width: をその画像幅に応じて変更してください。変更する場合、必ず半角英数字で入力してください。";');
+  nd.writeln('ht().innerHTML = "マップ画像の表示幅が600pxでないなら、width: をその画像幅に応じて変更してください。変更する場合、必ず半角英数字で入力してください。<br>※画像の表示幅は旧ページをChromeで開き、何もないところで「右クリック」→「検証」を実行すると調べられます。";');
   nd.writeln('}');
   nd.writeln('function do_img_tag() {');
-  nd.writeln('sc().value = \'<img src="/file/html/[filename]" alt="～見取り図">\';');
-  nd.writeln('ht().innerHTML = "必ず、divタグの中に貼り付けてください。[filename]は、HTMLブロックで画像をアップロードした際にCMSに登録された画像名に置き換えてください。alt属性値は「～の見取り図」としてください。～は階や場所にちなんでください。";');
+  nd.writeln('sc().value = \'<img src="/file/html/[filename]" alt="～見取り図" style="width: 600px;">\';');
+  nd.writeln('ht().innerHTML = "必ず、divタグの中に貼り付けてください。[filename]は、HTMLブロックで画像をアップロードした際にCMSに登録された画像名に置き換えてください。alt属性値は「～の見取り図」としてください。～は階や場所にちなんでください。マップ画像の表示幅が600pxでないなら、width: をその画像幅に応じて変更してください。変更する場合、必ず半角英数字で入力してください。<br>※画像の表示幅は旧ページをChromeで開き、何もないところで「右クリック」→「検証」を実行すると調べられます。";');
   nd.writeln('}');
   nd.writeln('function do_yellow_baloon() {');
   nd.writeln('sc().value = \'<a href="#[name]-spot1"><img src="/file/img/465890.png" alt="スポット1" style="position: absolute; top: 218px; left: 353px;"></a>\';');
