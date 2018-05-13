@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>IZON-util</title>
+  <style>
+  * { font-family: "メイリオ",Meiryo,sans-serif; }
+  h1 { font-size: 1.65em; }
+  button, textarea {
+    border-radius: 5px;
+  }
+  #srccode {
+    height: 18em;
+    width: 100%;
+  }
+  </style>
+  <script>
+  function get_hash() {
+    var hash = {
+      "①": "〔1〕",
+      "②": "〔2〕",
+      "③": "〔3〕",
+      "④": "〔4〕",
+      "⑤": "〔5〕",
+      "⑥": "〔6〕",
+      "⑦": "〔7〕",
+      "⑧": "〔8〕",
+      "⑨": "〔9〕",
+      "⑩": "〔10〕",
+      "㎡": "m2",
+      "㎥": "m3",
+      "㎠": "cm2",
+      "㎠": "cm3",
+      "㎟": "mm2",
+      "㎣": "mm3",
+      "㎖": "ml",
+      "ℓ":"l",
+    };
+    return hash;
+  }
+  function sc() {
+    return document.getElementById("srccode");
+  }
+  function replacer(str) {
+    var hash = get_hash();
+    for(var h in hash) {
+      var rgx = new RegExp(h, "mg");
+      str = str.replace(rgx, hash[h]);
+    }
+    return str;
+  }
+  function do_exec() {
+    var src = sc().value;
+    sc().value = replacer(src);
+  }
+  function do_clear() {
+    sc().value = "";
+  }
+  </script>
+</head>
+<body>
+  <h1>機種依存文字ツール</h1>
+  <textarea id="srccode">
+  </textarea>
+  <br>
+  <button id="reset-btn" onclick="do_exec()">実行</button>
+  <button id="reset-btn" onclick="do_clear()">表示クリア</button>
+</body>
+</html>
